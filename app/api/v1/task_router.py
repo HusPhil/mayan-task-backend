@@ -11,8 +11,12 @@ router = APIRouter(prefix="/tasks", tags=["Tasks API v1"])
 
 
 @router.get("/", response_model=list[TaskRead])
-def get_all_tasks(task_service: TaskService = Depends(get_task_service)):
-    all_tasks = task_service.get_all_tasks()
+def get_all_tasks(
+    task_service: TaskService = Depends(get_task_service),
+    params: TaskSearchParams = Depends(),
+):
+
+    all_tasks = task_service.get_all_tasks(params)
     return all_tasks
 
 

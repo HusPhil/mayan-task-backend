@@ -3,7 +3,8 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 
-from app.core.database import get_db
+from app.api.params import TaskSearchParams
+from app.api.enums import SortDirection
 from app.core.dto import TaskCreate, TaskRead, TaskUpdate
 from app.models.task_model import Task
 
@@ -27,8 +28,22 @@ class TaskService:
             created_at=task.created_at,
         )
 
-    def get_all_tasks(self) -> list[TaskRead]:
+    def get_all_tasks(self, params: TaskSearchParams) -> list[TaskRead]:
         statement = select(Task)
+
+        print("SERVICE:", params.query)
+        if params.query:
+            statement = statement.where(Task.title.ilike(f"%{params.query}%"))
+
+        print("SERVICE:", params.status)
+        if params.status:
+            statement = statement.where(Task.status.in_(params.status))
+
+        print("SERVICE:", params.sort)
+        if params.sort == SortDirection.DESCENDING:
+            statement = statement.order_by(Task.created_at.desc())
+        elif params.sort == SortDirection.ASCENDING:
+            statement = statement.order_by(Task.created_at.asc())
 
         tasks = self.db.scalars(statement).all()
 
