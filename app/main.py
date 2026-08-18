@@ -11,6 +11,8 @@ app = FastAPI(
 app.include_router(prefix="/api", router=v1_router)
 
 
-@app.get("/")
-def root():
-    return "FastAPI is working!"
+if is_development:
+
+    @app.get("/")
+    def health_check():
+        return "FastAPI is working!"

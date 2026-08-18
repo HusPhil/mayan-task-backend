@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 
 from app.core.database import get_db
-from app.core.dto import TaskCreate, TaskRead
+from app.core.dto import TaskCreate, TaskRead, TaskUpdate
 from app.models.task_model import Task
 
 
@@ -44,16 +44,41 @@ class TaskService:
         ]
 
     def get_task_by_id(self, task_id: UUID) -> TaskRead | None:
-        statement = select(Task).where(Task.id == task_id)
-        task = self.db.execute(statement).scalar_one_or_none()
+        task = self.db.get(Task, task_id)
 
-        if task == None:
+        if not task:
             return None
 
         return TaskRead.model_validate(task)
 
-    def update_task(self, task_id: str) -> TaskRead:
-        pass
+    def update_task(self, task_id: str, task_update: TaskUpdate) -> TaskRead | None:
 
-    def delete_task(self, task_id: str) -> TaskRead:
-        pass
+        task = self.db.get(Task, task_id)
+
+        if not Task:
+            return None
+
+        if task_update.title:
+            task.title = task_update.title
+
+        if task_update.description:
+            task.description = task_update.description
+
+        if task_update.status:
+            task.status = task_update.status
+
+        self.db.commit()
+        self.db.refresh(task)
+
+        return TaskRead.model_validate(task)
+
+    def delete_task(self, task_id: str) -> TaskRead | None:
+        task = self.db.get(Task, task_id)
+
+        if not task:
+            return None
+
+        self.db.delete(task)
+        self.db.commit()
+
+        return TaskRead.model_validate(task)
