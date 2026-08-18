@@ -31,19 +31,18 @@ class TaskService:
     def get_all_tasks(self, params: TaskSearchParams) -> list[TaskRead]:
         statement = select(Task)
 
-        print("SERVICE:", params.query)
         if params.query:
             statement = statement.where(Task.title.ilike(f"%{params.query}%"))
 
-        print("SERVICE:", params.status)
         if params.status:
             statement = statement.where(Task.status.in_(params.status))
 
-        print("SERVICE:", params.sort)
+        sort_column = getattr(Task, "created_at")
+
         if params.sort == SortDirection.DESCENDING:
-            statement = statement.order_by(Task.created_at.desc())
+            statement = statement.order_by(sort_column.desc())
         elif params.sort == SortDirection.ASCENDING:
-            statement = statement.order_by(Task.created_at.asc())
+            statement = statement.order_by(sort_column.asc())
 
         tasks = self.db.scalars(statement).all()
 
@@ -73,13 +72,13 @@ class TaskService:
         if not Task:
             return None
 
-        if task_update.title:
+        if task_update.title != None:
             task.title = task_update.title
 
-        if task_update.description:
+        if task_update.description != None:
             task.description = task_update.description
 
-        if task_update.status:
+        if task_update.status != None:
             task.status = task_update.status
 
         self.db.commit()
