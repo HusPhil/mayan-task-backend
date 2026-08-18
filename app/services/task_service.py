@@ -42,3 +42,18 @@ class TaskService:
             )
             for task in tasks
         ]
+
+    def get_task_by_id(self, task_id: UUID) -> TaskRead | None:
+        statement = select(Task).where(Task.id == task_id)
+        task = self.db.execute(statement).scalar_one_or_none()
+
+        if task == None:
+            return None
+
+        return TaskRead.model_validate(task)
+
+    def update_task(self, task_id: str) -> TaskRead:
+        pass
+
+    def delete_task(self, task_id: str) -> TaskRead:
+        pass

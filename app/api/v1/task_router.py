@@ -23,3 +23,16 @@ def create_task(
 ):
     created_task = task_service.create_task(new_task)
     return created_task
+
+
+@router.get("/{task_id}", response_model=TaskRead)
+def get_task_by_id(
+    task_id: str,
+    task_service: TaskService = Depends(get_task_service),
+):
+    task = task_service.get_task_by_id(task_id)
+
+    if not task:
+        return status.HTTP_404_NOT_FOUND
+
+    return task
