@@ -2,7 +2,11 @@ from fastapi import FastAPI
 from app.api.router import v1_router
 from app.core.config import settings
 
-app = FastAPI()
+is_development = settings.ENVIRONMENT == "development"
+
+app = FastAPI(docs_url="/docs" if is_development else None)
+
+app.docs_url = None
 
 app.include_router(prefix="/api", router=v1_router)
 

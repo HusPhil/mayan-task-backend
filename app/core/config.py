@@ -11,5 +11,7 @@ class Settings(BaseSettings):
         f"postgresql://{os.getenv('USER')}:{os.getenv('PASSWORD')}@{os.getenv('HOST')}/{os.getenv('DATABASE_NAME')}?sslmode=require"
     )
 
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "production")
+
 
 settings = Settings()
