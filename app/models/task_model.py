@@ -1,5 +1,5 @@
 from uuid import uuid4
-from sqlalchemy import Column, DateTime, Enum, String, Text, Uuid
+from sqlalchemy import Column, DateTime, Enum, SmallInteger, String, Text, Uuid
 
 from app.core.database import Base
 from app.core.enums import TaskStatus
@@ -13,7 +13,7 @@ class Task(Base):
     title = Column(String(255), nullable=False, index=True)
     description = Column(Text, nullable=False)
     status = Column(
-        Enum(TaskStatus, name="task_status_enum"),
+        SmallInteger,
         default=TaskStatus.INCOMPLETE,
         nullable=False,
         index=True,

@@ -1,6 +1,6 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class TaskStatus(str, Enum):
-    INCOMPLETE = "INCOMPLETE"
-    COMPLETE = "COMPLETE"
+class TaskStatus(IntEnum):
+    INCOMPLETE = 0
+    COMPLETE = 1
