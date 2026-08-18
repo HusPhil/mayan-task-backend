@@ -1,10 +1,11 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 
 from app.api.params import TaskSearchParams
-from app.core.dependency_injection import get_task_service
+from app.api.dependency_injection import get_task_service
 from app.core.dto import TaskCreate, TaskRead, TaskUpdate
+from app.core.errors import TaskNotFoundError
 from app.services.task_service import TaskService
 
 router = APIRouter(prefix="/tasks", tags=["Tasks API v1"])
@@ -36,9 +37,7 @@ def get_task_by_id(
     task = task_service.get_task_by_id(task_id)
 
     if not task:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Task not found"
-        )
+        raise TaskNotFoundError(task_id)
 
     return task
 
@@ -52,9 +51,7 @@ def update_task(
     task = task_service.update_task(task_id, task_update)
 
     if not task:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Task not found"
-        )
+        raise TaskNotFoundError(task_id)
 
     return task
 
@@ -62,4 +59,8 @@ def update_task(
 @router.delete("/{task_id}", response_model=TaskRead)
 def delete_task(task_id: UUID, task_service: TaskService = Depends(get_task_service)):
     task = task_service.delete_task(task_id)
+
+    if not task:
+        raise TaskNotFoundError(task_id)
+
     return task

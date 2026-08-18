@@ -69,7 +69,7 @@ class TaskService:
 
         task = self.db.get(Task, task_id)
 
-        if not Task:
+        if not task:
             return None
 
         if task_update.title != None:
