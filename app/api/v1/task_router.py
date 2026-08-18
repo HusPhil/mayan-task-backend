@@ -1,7 +1,5 @@
-from typing import Annotated
 from uuid import UUID
 
-from anyio import Path
 from fastapi import APIRouter, Body, Depends, Response, status
 
 from app.core.dependency_injection import get_task_service
@@ -27,7 +25,7 @@ def create_task(
 
 @router.get("/{task_id}", response_model=TaskRead)
 def get_task_by_id(
-    task_id: str,
+    task_id: UUID,
     task_service: TaskService = Depends(get_task_service),
 ):
     task = task_service.get_task_by_id(task_id)
