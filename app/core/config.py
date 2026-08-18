@@ -6,7 +6,7 @@ from pydantic.v1 import BaseSettings
 load_dotenv()
 
 
-class Settings(BaseSettings):
+class settings(BaseSettings):
     DATABASE_URL: str = (
         f"postgresql://{os.getenv('USER')}:{os.getenv('PASSWORD')}@{os.getenv('HOST')}/{os.getenv('DATABASE_NAME')}?sslmode=require"
     )
@@ -14,4 +14,4 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "production")
 
 
-settings = Settings()
+settings = settings()
