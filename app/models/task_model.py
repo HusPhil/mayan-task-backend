@@ -1,5 +1,5 @@
 from uuid import uuid4
-from sqlalchemy import Column, DateTime, Enum, SmallInteger, String, Text, Uuid
+from sqlalchemy import Column, DateTime, SmallInteger, String, Text, Uuid
 
 from app.core.database import Base
 from app.core.enums import TaskStatus

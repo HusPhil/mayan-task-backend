@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
+from uuid import UUID
+from pydantic import BaseModel, ConfigDict, field_validator
 from app.core.enums import TaskStatus
 
 
@@ -10,10 +11,13 @@ class TaskCreate(BaseModel):
 
 
 class TaskRead(BaseModel):
+    id: UUID
     title: str
     description: str
     status: TaskStatus
     created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TaskUpdate(BaseModel):

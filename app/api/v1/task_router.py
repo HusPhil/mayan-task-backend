@@ -1,3 +1,7 @@
+from typing import Annotated
+from uuid import UUID
+
+from anyio import Path
 from fastapi import APIRouter, Body, Depends, Response, status
 
 from app.core.dependency_injection import get_task_service
@@ -7,9 +11,10 @@ from app.services.task_service import TaskService
 router = APIRouter(prefix="/tasks")
 
 
-@router.get("/")
-def get_all_tasks():
-    return "Task router is working well!"
+@router.get("/", response_model=list[TaskRead])
+def get_all_tasks(task_service: TaskService = Depends(get_task_service)):
+    all_tasks = task_service.get_all_tasks()
+    return all_tasks
 
 
 @router.post("/", response_model=TaskRead)
