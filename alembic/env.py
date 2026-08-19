@@ -13,7 +13,7 @@ load_dotenv()
 # access to the values within the .ini file in use.
 config = context.config
 
-database_url = f"postgresql://{os.getenv('USER')}:{os.getenv('PASSWORD')}@{os.getenv('HOST')}/{os.getenv('DATABASE_NAME')}?sslmode=require"
+database_url = f"postgresql://{os.getenv('USER')}:{os.getenv('PASSWORD')}@{os.getenv('HOST')}/{os.getenv('DATABASE_NAME')}?sslmode={os.getenv('SSL_MODE')}"
 config.set_main_option("sqlalchemy.url", database_url)
 
 # Interpret the config file for Python logging.

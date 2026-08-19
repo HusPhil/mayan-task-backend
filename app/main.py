@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.concurrency import asynccontextmanager
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.router import v1_router
 from app.core.config import settings
@@ -14,7 +14,7 @@ allowed_origins = (
 
 
 @asynccontextmanager
-async def startup_event():
+async def lifespan(app: FastAPI):
     alembic_cfg = Config("alembic.ini")
     command.upgrade(alembic_cfg, "head")
     yield
@@ -26,6 +26,7 @@ app = FastAPI(
     redoc_url="/redoc" if is_development else None,
     openapi_url="/openapi.json" if is_development else None,
     debug=is_development,
+    lifespan=lifespan,
 )
 
 app.include_router(prefix="/api", router=v1_router)
