@@ -23,6 +23,9 @@ async def startup_event():
 app = FastAPI(
     title="Mayan Task Management API",
     docs_url="/docs" if is_development else None,
+    redoc_url="/redoc" if is_development else None,
+    openapi_url="/openapi.json" if is_development else None,
+    debug=is_development,
 )
 
 app.include_router(prefix="/api", router=v1_router)
